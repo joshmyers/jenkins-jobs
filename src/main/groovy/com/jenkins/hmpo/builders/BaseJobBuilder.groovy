@@ -4,6 +4,7 @@ import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
+import com.jenkins.hmpo.utils.CommonUtils
 
 /**
  * The base job building block
@@ -27,9 +28,7 @@ class BaseJobBuilder {
     Job build(DslFactory dslFactory) {
         dslFactory.job(name) {
             it.description this.description
-            logRotator {
-                numToKeep 5
-            }
+            CommonUtils.addDefaults(delegate)
             steps {
                 shell('echo foo;')
             }
