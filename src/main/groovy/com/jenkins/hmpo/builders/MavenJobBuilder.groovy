@@ -35,6 +35,7 @@ class MavenJobBuilder {
     String gitProject = 'hmpo-pex'
     String gitRepository
     String gitUrl = 'git.com.hmpo.net'
+    Boolean artifactoryPublish = true
     Boolean gitlabPush = true
     Boolean promote = true
     List<String> emails = []
@@ -78,6 +79,35 @@ class MavenJobBuilder {
                         rebuildOpenMergeRequest('source')
                         commentTrigger('rebuild')
                         skipWorkInProgressMergeRequest(false)
+                    }
+                }
+            }
+            if (artifactoryPublish) {
+                configure { project ->
+                    project / publishers << 'org.jfrog.hudson.ArtifactoryRedeployPublisher' {
+                        details {
+                            artifactoryName('1175845550@1463582259959')
+                            artifactoryUrl('https://artifactory-ui.com.hmpo.net/artifactory')
+                            deployReleaseRepository {
+                                keyFromText('libs-release-local')
+                                keyFromSelect(null)
+                                dynamicMode(true)
+                            }
+                            deploySnapshotRepository {
+                                keyFromText('libs-snapshot-local')
+                                keyFromSelect(null)
+                                dynamicMode(true)
+                            }
+                            resolveReleaseRepository(null)
+                            resolveSnapshotRepository(null)
+                            userPluginKey(null)
+                            userPluginParams(null)
+                            }
+                            deployBuildInfo(true)
+                            discardBuildArtifacts(true)
+                            discardOldBuilds(false)
+                            deployArtifacts(true)
+                            evenIfUnstable(false)
                     }
                 }
             }
