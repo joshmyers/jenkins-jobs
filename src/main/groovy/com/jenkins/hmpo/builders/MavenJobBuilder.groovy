@@ -89,7 +89,7 @@ class MavenJobBuilder {
                     publishers {
                         gitLabCommitStatusPublisher {
                             name('jenkins')
-                            markUnstableAsSuccess('false')
+                            markUnstableAsSuccess(false)
                         }
                     }
                 }
