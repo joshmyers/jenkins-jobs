@@ -35,8 +35,8 @@ class MavenJobBuilder {
     String gitProject = 'hmpo-pex'
     String gitRepository
     String gitUrl = 'git.com.hmpo.net'
-    Boolean gitlabPush = false
-    Boolean promote = false
+    Boolean gitlabPush = true
+    Boolean promote = true
     List<String> emails = []
 
     MavenJob build(DslFactory dslFactory) {
