@@ -39,6 +39,7 @@ class MavenJobBuilder {
     Boolean gitlabPush = true
     Boolean promote = true
     Boolean gitLabCommitStatus = true
+    Boolean gitPushTag = true
     List<String> emails = []
 
     MavenJob build(DslFactory dslFactory) {
@@ -55,6 +56,33 @@ class MavenJobBuilder {
                 if (emails) {
                     publishers {
                         CommonUtils.addExtendedEmail(delegate, emails)
+                    }
+                }
+                if (gitPushTag) {
+                    publishers {
+                        flexiblePublish {
+                            conditionalAction {
+                                condition {
+                                and {
+                                    stringsMatch('${BRANCH_TO_BUILD}', 'master', true)
+                                    } {
+                                    status('SUCCESS', 'SUCCESS')
+                                    }
+                                }
+                                publishers {
+                                    git {
+                                        pushOnlyIfSuccess(true)
+                                        pushMerge(false)
+                                        forcePush(false)
+                                        tag('origin', 'v${BUILD_NUMBER}') {
+                                            message('Release $PIPELINE_VERSION')
+                                            create(true)
+                                            update(false)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 if (gitLabCommitStatus) {
