@@ -38,6 +38,7 @@ class MavenJobBuilder {
     Boolean artifactoryPublish = true
     Boolean gitlabPush = true
     Boolean promote = true
+    Boolean gitLabCommitStatus = true
     List<String> emails = []
 
     MavenJob build(DslFactory dslFactory) {
@@ -54,6 +55,14 @@ class MavenJobBuilder {
                 if (emails) {
                     publishers {
                         CommonUtils.addExtendedEmail(delegate, emails)
+                    }
+                }
+                if (gitLabCommitStatus) {
+                    publishers {
+                        gitLabCommitStatusPublisher {
+                            name('jenkins')
+                            markUnstableAsSuccess('false')
+                        }
                     }
                 }
             }
