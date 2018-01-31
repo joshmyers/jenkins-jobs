@@ -149,15 +149,104 @@ class MavenJobBuilder {
                 }
             }
             if (promote) {
-                properties{
+                properties {
                     promotions {
                         promotion {
                             name('int')
+                            icon('star-purple')
                             conditions {
-                                manual('tester')
+                                parameterizedSelfPromotion(false, 'BRANCH_TO_BUILD', 'master')
                             }
                             actions {
-                                shell('echo foo;')
+                                downstreamParameterized {
+                                    trigger("promote") {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
+                                        parameters {
+                                            predefinedProp("ENVIRONMENT", "int")
+                                            predefinedProp("PROMOTED_JOB_NAME", "\${PROMOTED_JOB_FULL_NAME}")
+                                            predefinedProp("PROMOTED_NUMBER","\${PROMOTED_NUMBER}")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        promotion {
+                            name('sit')
+                            icon('star-green')
+                            conditions {
+                                selfPromotion(false)
+                                upstream('int')
+                                manual('')
+                            }
+                            actions {
+                                downstreamParameterized {
+                                    trigger("promote") {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
+                                        parameters {
+                                            predefinedProp("ENVIRONMENT", "sit")
+                                            predefinedProp("PROMOTED_JOB_NAME", "\${PROMOTED_JOB_FULL_NAME}")
+                                            predefinedProp("PROMOTED_NUMBER","\${PROMOTED_NUMBER}")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        promotion {
+                            name('stg')
+                            icon('star-yellow')
+                            conditions {
+                                selfPromotion(false)
+                                upstream('sit')
+                                manual('')
+                            }
+                            actions {
+                                downstreamParameterized {
+                                    trigger("promote") {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
+                                        parameters {
+                                            predefinedProp("ENVIRONMENT", "stg")
+                                            predefinedProp("PROMOTED_JOB_NAME", "\${PROMOTED_JOB_FULL_NAME}")
+                                            predefinedProp("PROMOTED_NUMBER","\${PROMOTED_NUMBER}")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        promotion {
+                            name('prd_aws')
+                            icon('star-red')
+                            conditions {
+                                selfPromotion(false)
+                                upstream('stg')
+                                manual('')
+                            }
+                            actions {
+                                downstreamParameterized {
+                                    trigger("promote") {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
+                                        parameters {
+                                            predefinedProp("ENVIRONMENT", "prd_aws")
+                                            predefinedProp("PROMOTED_JOB_NAME", "\${PROMOTED_JOB_FULL_NAME}")
+                                            predefinedProp("PROMOTED_NUMBER","\${PROMOTED_NUMBER}")
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
