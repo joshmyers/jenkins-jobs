@@ -17,7 +17,7 @@ import com.jenkins.hmpo.utils.CommonUtils
  * @param name used to name the job
  * @param description job description
  * @param goals Maven goals to build
- * @param branchToBuild Branch to check out for SCM
+ * @param gitBranchToBuild Branch to check out for SCM
  * @param gitProject Git project for SCM
  * @param gitRepository Git repoistory for SCM
  * @param gitUrl Git URL for SCM
@@ -31,7 +31,7 @@ class MavenJobBuilder {
     String name
     String description
     String goals = 'clean test'
-    String branchToBuild = 'master'
+    String gitBranchToBuild = 'master'
     String gitProject = 'hmpo-pex'
     String gitRepository
     String gitUrl = 'git.com.hmpo.net'
