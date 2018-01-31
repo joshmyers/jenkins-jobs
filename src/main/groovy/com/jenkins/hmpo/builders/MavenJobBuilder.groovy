@@ -44,6 +44,11 @@ class MavenJobBuilder {
             gitRepository = gitRepository ?: name
             it.description this.description
             CommonUtils.addDefaults(delegate)
+            parameters {
+                stringParam('BRANCH_TO_BUILD', gitBranchToBuild, 'branch to build')
+                stringParam('NAME', gitRepository, 'project name')
+                stringParam('PROJECT', gitProject, 'project')
+            }
             publishers {
                 if (emails) {
                     publishers {
@@ -57,9 +62,9 @@ class MavenJobBuilder {
                         wipeOutWorkspace()
                     }
                     remote {
-                       url("git@${gitUrl}:${gitProject}/${gitRepository}.git")
+                       url("git@${gitUrl}:\${PROJECT}/\${NAME}.git")
                     }
-                    branch(branchToBuild)
+                    branch('${BRANCH_TO_BUILD}')
                 }
                 goals(goals)
             }
